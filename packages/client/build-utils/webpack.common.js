@@ -17,6 +17,7 @@ const config = {
   resolve: {
     extensions: ['.js', '.jsx'],
     alias: {
+      Actions: path.join(commonPaths.appEntry, 'actions'),
       Components: path.join(commonPaths.appEntry, 'components'),
       Reducer: path.join(commonPaths.appEntry, 'reducer'),
       Store: path.join(commonPaths.appEntry, 'store'),
