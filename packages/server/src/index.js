@@ -1,14 +1,17 @@
-import express from 'express';
-import morgan from 'morgan';
-import bodyParser from 'body-parser';
-import methodOverride from 'method-override';
-import helmet from 'helmet';
-import cors from 'cors';
+import express from "express";
+import morgan from "morgan";
+import bodyParser from "body-parser";
+import methodOverride from "method-override";
+import helmet from "helmet";
+import passport from "passport";
+import cors from "cors";
 
-import routes from './api/routes/v1';
-import { logs, port, env } from './config/vars';
-import db from './config/db';
-import seed from './seed';
+import routes from "./api/routes/v1";
+import { handler as errorHandler, notFound } from "./api/middlewares/error";
+import { logs, port, env } from "./config/vars";
+import { jwt as JwtStrategy } from "./config/passport";
+import db from "./config/db";
+import seed from "./seed";
 
 class Server {
   constructor() {
@@ -16,7 +19,7 @@ class Server {
   }
 
   async initialize() {
-    console.log(`[Environment] ${env}`)
+    console.log(`[Environment] ${env}`);
     // init database
     await db.connect();
 
@@ -40,8 +43,18 @@ class Server {
     // enable CORS - Cross Origin Resource Sharing
     this.server.use(cors());
 
+    // enable authentication
+    this.server.use(passport.initialize());
+    passport.use("jwt", JwtStrategy);
+
     // mount api v1 routes
-    this.server.use('/v1', routes);
+    this.server.use("/v1", routes);
+
+    // catch 404
+    this.server.use(notFound);
+
+    // catch api erros
+    this.server.use(errorHandler);
 
     // start server
     this.server.listen(port, () =>

@@ -1,15 +1,17 @@
-import mongoose from 'mongoose';
-import httpStatus from 'http-status';
-import { omitBy, isNil } from 'lodash';
-import bcrypt from 'bcryptjs';
-import moment from 'moment-timezone';
+import mongoose from "mongoose";
+import httpStatus from "http-status";
+import { omitBy, isNil } from "lodash";
+import bcrypt from "bcryptjs";
+import moment from "moment-timezone";
+import jwt from "jwt-simple";
 
-import { jwtSecret, jwtExpirationInterval } from '../../config/vars';
+import { jwtSecret, jwtExpirationInterval } from "../../config/vars";
+import { APIError } from "../errors";
 
 /**
  * User Roles
  */
-const roles = ['patient', 'doctor', 'admin'];
+const roles = ["patient", "doctor", "admin"];
 
 const userSchema = new mongoose.Schema(
   {
@@ -19,13 +21,13 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
-      lowercase: true,
+      lowercase: true
     },
     password: {
       type: String,
       required: true,
       minlength: 6,
-      maxlength: 128,
+      maxlength: 128
     },
     age: Number,
     phone: String,
@@ -39,22 +41,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       maxlength: 128,
       index: true,
-      trim: true,
+      trim: true
     },
     role: {
       type: String,
       enum: roles,
-      default: 'user',
-    },
+      default: "user"
+    }
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
 
-userSchema.pre('save', async function save(next) {
+userSchema.pre("save", async function save(next) {
   try {
-    if (!this.isModified('password')) return next();
+    if (!this.isModified("password")) return next();
 
     const hash = await bcrypt.hash(this.password, 10);
     this.password = hash;
@@ -68,7 +70,7 @@ userSchema.pre('save', async function save(next) {
 userSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['_id', 'name', 'email', 'role', 'createdAt', 'age', 'phone', 'mailAddress'];
+    const fields = ["_id", "name", "role"];
 
     fields.forEach(field => {
       transformed[field] = this[field];
@@ -80,17 +82,17 @@ userSchema.method({
   token() {
     const playload = {
       exp: moment()
-        .add(jwtExpirationInterval, 'minutes')
+        .add(jwtExpirationInterval, "minutes")
         .unix(),
       iat: moment().unix(),
-      sub: this._id,
+      sub: this._id
     };
     return jwt.encode(playload, jwtSecret);
   },
 
   async passwordMatches(password) {
     return bcrypt.compare(password, this.password);
-  },
+  }
 });
 
 userSchema.statics = {
@@ -108,8 +110,8 @@ userSchema.statics = {
       }
 
       throw new APIError({
-        message: 'User does not exist',
-        status: httpStatus.NOT_FOUND,
+        message: "User does not exist",
+        status: httpStatus.NOT_FOUND
       });
     } catch (error) {
       throw error;
@@ -117,36 +119,34 @@ userSchema.statics = {
   },
 
   async findAndGenerateToken(options) {
-    const { email, password, refreshObject } = options;
+    const { email, password } = options;
     if (!email)
       throw new APIError({
-        message: 'An email is required to generate a token',
+        message: "An email is required to generate a token"
       });
 
     const user = await this.findOne({ email }).exec();
     const err = {
       status: httpStatus.UNAUTHORIZED,
-      isPublic: true,
+      isPublic: true
     };
+
     if (password) {
       if (user && (await user.passwordMatches(password))) {
         return { user, accessToken: user.token() };
       }
-      err.message = 'Incorrect email or password';
-    } else if (refreshObject && refreshObject.userEmail === email) {
-      if (moment(refreshObject.expires).isBefore()) {
-        err.message = 'Invalid refresh token.';
-      } else {
-        return { user, accessToken: user.token() };
-      }
+      err.message = "Incorrect email or password";
     } else {
-      err.message = 'Incorrect email or refreshToken';
+      err.message = "Incorrect email or refreshToken";
     }
     throw new APIError(err);
   },
 
   list({ page = 1, perPage = 30, name, email, role, phone, age, mailAddress }) {
-    const options = omitBy({ name, email, role, phone, age, mailAddress }, isNil);
+    const options = omitBy(
+      { name, email, role, phone, age, mailAddress },
+      isNil
+    );
 
     return this.find(options)
       .sort({ createdAt: -1 })
@@ -156,23 +156,23 @@ userSchema.statics = {
   },
 
   checkDuplicateEmail(error) {
-    if (error.name === 'MongoError' && error.code === 11000) {
+    if (error.name === "MongoError" && error.code === 11000) {
       return new APIError({
-        message: 'Validation Error',
+        message: "Validation Error",
         errors: [
           {
-            field: 'email',
-            location: 'body',
-            messages: ['"email" already exists'],
-          },
+            field: "email",
+            location: "body",
+            messages: ['"email" already exists']
+          }
         ],
         status: httpStatus.CONFLICT,
         isPublic: true,
-        stack: error.stack,
+        stack: error.stack
       });
     }
     return error;
   }
-}
+};
 
-export default mongoose.model('User', userSchema);
+export default mongoose.model("User", userSchema);
