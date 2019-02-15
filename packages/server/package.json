@@ -1,0 +1,35 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "dev": "nodemon --exec babel-node ./src/index.js",
+    "build": "babel src --out-dir dist",
+    "pretty": "prettier --write \"./src/**/*.js\""
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.3.1",
+    "nodemon": "^1.18.10",
+    "prettier": "^1.16.4"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.3.1",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "dotenv-safe": "^6.1.0",
+    "express": "^4.16.4",
+    "helmet": "^3.15.1",
+    "lodash": "^4.17.11",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.4.12",
+    "morgan": "^1.9.1"
+  }
+}

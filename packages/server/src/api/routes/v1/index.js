@@ -1,0 +1,10 @@
+const express = require('express');
+
+const router = express.Router();
+
+/**
+ * GET v1/status
+ */
+router.get('/ping', (req, res) => res.send('Pong'));
+
+module.exports = router;
