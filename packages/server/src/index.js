@@ -7,6 +7,8 @@ import cors from 'cors';
 
 import routes from './api/routes/v1';
 import { logs, port, env } from './config/vars';
+import db from './config/db';
+import seed from './seed';
 
 class Server {
   constructor() {
@@ -14,6 +16,13 @@ class Server {
   }
 
   async initialize() {
+    console.log(`[Environment] ${env}`)
+    // init database
+    await db.connect();
+
+    // seed database
+    await seed();
+
     // request logging. dev: console | production: file
     this.server.use(morgan(logs));
 
@@ -36,7 +45,7 @@ class Server {
 
     // start server
     this.server.listen(port, () =>
-      console.log(`server started on port ${port} (${env})`)
+      console.log(`[http] started on port ${port}`)
     );
   }
 }
