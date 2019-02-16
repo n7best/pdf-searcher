@@ -4,6 +4,9 @@
 ```
 docker-compose up
 ```
+- You will see all the seed account info on first run.
+- Frontend default url will be dockerurl:3000
+- Backend default url will be dockerurl:8080
 
 ### Manually
 - Setup an mongodb server
