@@ -10,6 +10,8 @@ docker-compose up
 - Fill environment requirement using environment or in `packages/server/.env.example` and make it `.env`
 - `npm install ` on root directory
 - `npx lerna boostrap` on root directory
+- `npm run build` on `packages/server` directory
+- `npm run build` on `packages/client` directory
 - `npm run start` on root directory
 
 ## Folder Structure 
