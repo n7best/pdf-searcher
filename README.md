@@ -2,7 +2,7 @@
 
 ### Using Docker
 ```
-docker compose up
+docker-compose up
 ```
 
 ### Manually
