@@ -40,7 +40,6 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       maxlength: 128,
-      index: true,
       trim: true
     },
     role: {
@@ -70,7 +69,7 @@ userSchema.pre("save", async function save(next) {
 userSchema.method({
   transform() {
     const transformed = {};
-    const fields = ["_id", "name", "role"];
+    const fields = ["_id", "name", "role", "age", "phone", "mailAddress"];
 
     fields.forEach(field => {
       transformed[field] = this[field];
@@ -147,6 +146,10 @@ userSchema.statics = {
       { name, email, role, phone, age, mailAddress },
       isNil
     );
+
+    if (typeof options.name !== "undefined") {
+      options.name = { $regex: options.name, $options: "i" };
+    }
 
     return this.find(options)
       .sort({ createdAt: -1 })

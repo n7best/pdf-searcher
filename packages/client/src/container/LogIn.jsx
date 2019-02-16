@@ -2,8 +2,8 @@ import React, { useState, useCallback } from 'react';
 import { css } from "emotion";
 import { Redirect } from 'react-router-dom'
 import useAuth from 'Hooks/useAuth';
-import classNames from 'classnames';
 import Input from 'Components/Input';
+import Button from 'Components/Button';
 import { login } from 'Actions/auth';
 import {useDispatch} from 'redux-react-hook';
 
@@ -45,12 +45,10 @@ const Login = () => {
             placeholder="Password"
             onChange={value => setForm(form => ({ ...form, password: value}))}  
           />
-          <button 
-            className={classNames(styles.button, {
-              'disable': invalid
-            })}
+          <Button 
+            disable={invalid}
             onClick={loginHandler}
-          >Sign In</button>
+          >Sign In</Button>
         </div>
       </div>
     </div>
@@ -80,21 +78,6 @@ const styles = {
     color: #000;
     margin: 20px 0;
     background: #ffdfdf;
-  `,
-  button: css`
-    margin: 20px 0;
-    background: rgb(57,171,209);
-    border: 1px solid #ccc;
-    width: 100%;
-    padding: 20px;
-    color: #fff;
-    font-size: 18px;
-    cursor: pointer;
-
-    &.disable {
-      background: #ccc;
-      cursor: not-allowed;
-    }
   `
 }
 

@@ -1,6 +1,7 @@
 import express from "express";
 import userRoutes from "./user.route";
 import authRoutes from "./auth.route";
+import patientRoutes from "./patient.route";
 
 const router = express.Router();
 
@@ -9,7 +10,8 @@ const router = express.Router();
  */
 router.get("/ping", (req, res) => res.send("Pong"));
 
-router.use("/users", userRoutes);
+router.use("/user", userRoutes);
 router.use("/auth", authRoutes);
+router.use("/patients", patientRoutes);
 
 export default router;

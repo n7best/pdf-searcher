@@ -8,5 +8,6 @@
   "scripts": {
     "start:server": "npm -C ./packages/server run start",
     "start:client": "npm -C ./packages/client run start",
+    "dev:server": "npm -C ./packages/server run dev"
   }
 }

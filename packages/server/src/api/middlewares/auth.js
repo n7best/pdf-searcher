@@ -4,6 +4,7 @@ import User from "../models/user.model";
 import { APIError } from "../errors";
 
 export const ADMIN = "admin";
+export const DOCTOR = "doctor";
 export const LOGGED_USER = "_loggedUser";
 
 const handleJWT = (req, res, next, roles) => async (err, user, info) => {
