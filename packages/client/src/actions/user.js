@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { receivedProfile } from 'Reducer/user';
+import { api_endpoint } from './config';
 
 export const ACTION_TYPE = {
   GET_PROFILE: 'user/getProfile',
@@ -8,7 +9,7 @@ export const ACTION_TYPE = {
 export const getProfile = () => async (dispatch, getState) => {
   const { accessToken } = getState().auth;
   try {
-    const res = await axios.get(API_BASE_URL + `/v1/user/profile`, {
+    const res = await axios.get(api_endpoint + `/v1/user/profile`, {
       headers: {
         Authorization: 'Bearer ' + accessToken,
       },
@@ -23,7 +24,7 @@ export const getProfile = () => async (dispatch, getState) => {
 export const updateProfile = user => async (dispatch, getState) => {
   const { accessToken } = getState().auth;
   try {
-    const res = await axios.post(API_BASE_URL + `/v1/user/profile`, user, {
+    const res = await axios.post(api_endpoint + `/v1/user/profile`, user, {
       headers: {
         Authorization: 'Bearer ' + accessToken,
       },

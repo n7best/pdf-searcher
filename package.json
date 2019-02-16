@@ -6,8 +6,13 @@
     "lerna": "^3.13.0"
   },
   "scripts": {
-    "start:server": "npm -C ./packages/server run start",
-    "start:client": "npm -C ./packages/client run start",
+    "start": "npm run start:server && npm run start:client && pm2 logs",
+    "start:server": "pm2 start ./packages/server/dist/index.js --name \"server\"",
+    "start:client": "pm2 start ./clientstartscript.js --name \"client\"",
     "dev:server": "npm -C ./packages/server run dev"
+  },
+  "dependencies": {
+    "node-cmd": "^3.0.0",
+    "pm2": "^3.2.9"
   }
 }

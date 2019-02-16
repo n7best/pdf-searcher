@@ -1,0 +1,16 @@
+{
+  "apps": [
+      {
+          "name": "server",
+          "cwd": "./packages/server",
+          "script": "npm",
+          "args": "start"
+      },
+      {
+        "name": "client",
+        "cwd": "./packages/client",
+        "script": "npx",
+        "args": "http-server dist -p 3000"
+    }
+  ]
+}

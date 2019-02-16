@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { StoreContext } from 'redux-react-hook';
 
-import App from './Container/App';
+import App from './container/App';
 import { makeStore } from './store';
 
 // global styles
